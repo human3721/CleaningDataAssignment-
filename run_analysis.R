@@ -89,21 +89,11 @@ names(merged_data4)
 selectred_row2<-c("activity","subject",row_names2[grepl("mean", row_names2)])
 merged_data5<-merged_data4[selectred_row2]
 
-## stack all the measurement feature columns. names it "variable"   
+## tabulate the means of each feature measurement for each activity and each subject
 library(reshape2)
-data_melt<-melt(merged_data5,id=c("activity", "subject"),measure.vars = names(merged_data5)[-c(1,2)])
-colnames(data_melt)[3]<-"variable" 
+listAC<-list(subject = merged_data5$subject, activity = merged_data5$activity)
+final_table<-aggregate(merged_data5[3:ncol(merged_data5)], by= listAC, mean)
+final_table<-final_table[order(final_table$subject),]
 
-## tabulate the means of each variable for each activity and each subject
-library(dplyr)
-## Columns I want to group by
-grp_cols<-names(data_melt)[-4]
-## Convert character vector to list of symbols
-dots <- lapply(grp_cols, as.symbol)
-data_melt2<-group_by_(data_melt,.dots=dots)
-## find the mean
-final_table<-summarize(data_melt2, value=mean(value,na.rm=TRUE))
-colnames(final_table)[4]<-"mean"
-final_table
 ## explorting the data
-write.csv(final_table,file="./final_mean_table.csv",row.names=FALSE)
+write.csv(final_table,file="./tidy_mean_table.csv",row.names=FALSE)
