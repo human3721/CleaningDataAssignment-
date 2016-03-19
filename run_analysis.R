@@ -106,4 +106,4 @@ final_table<-summarize(data_melt2, value=mean(value,na.rm=TRUE))
 colnames(final_table)[4]<-"mean"
 final_table
 ## explorting the data
-write.csv(final_table,file="./final_mean_table.csv")
+write.csv(final_table,file="./final_mean_table.csv",row.names=FALSE)
